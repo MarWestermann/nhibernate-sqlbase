@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-configuration xmlns="urn:nhibernate-configuration-2.2">
+  <session-factory>
+    <property name="connection.provider">NHibernate.Connection.DriverConnectionProvider</property>
+    <property name="dialect">Intersales.Qstep.Persistence.Sqlbase.SqlbaseDialect, Intersales.Qstep.Persistence.Sqlbase</property>
+    <property name="connection.driver_class">Intersales.Qstep.Persistence.Sqlbase.SqlbaseDriver, Intersales.Qstep.Persistence.Sqlbase</property>
+    <property name="connection.connection_string">DB=HVM;SERVER=ZDB;UID=SYSADM;PWD=SYSADM;ini=C:\Program Files (x86)\Unify\SQLBase116\sql.ini</property>
+    <property name="show_sql">true</property>
+  </session-factory>
+</hibernate-configuration>

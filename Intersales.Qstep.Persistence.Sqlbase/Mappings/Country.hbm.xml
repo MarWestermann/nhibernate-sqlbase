@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+                   assembly="Intersales.Qstep.Persistence.Sqlbase"
+                   namespace="Intersales.Qstep.Persistence.Sqlbase.Domain">
+
+  <class name="Country" table="HTLAENDER">
+    <id name="Id" column="LAND_NKEY"/>
+    <property name="Name" column="LAND_NAME" />
+  </class>
+
+</hibernate-mapping>
