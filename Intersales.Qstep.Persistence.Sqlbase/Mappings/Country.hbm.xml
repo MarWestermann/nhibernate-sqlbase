@@ -6,6 +6,7 @@
   <class name="Country" table="HTLAENDER">
     <id name="Id" column="LAND_NKEY"/>
     <property name="Name" column="LAND_NAME" />
+    <property name="BankAbbreviation" column="LAND_SBANK" />
   </class>
 
 </hibernate-mapping>

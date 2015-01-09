@@ -12,43 +12,51 @@ namespace Intersales.Qstep.Persistence.Sqlbase.Repositories
 {
     public class CountryRepository
     {
-        public void Add()
-        {
 
+        private ISession _session;
+
+        public CountryRepository(ISession session)
+        {
+            this._session = session;
         }
 
-        void Update()
+        public void Save(Country country)
         {
-
+           
+            if (country.Id == null)
+            {
+                country.Id = 500 + new Random().Next(0, 1000);
+            }
+            _session.SaveOrUpdate(country);
+               
         }
 
-        void Remove()
+        public void Remove(Country country)
         {
+                _session.Delete(country);
 
         }
 
         public Country GetById(int id)
         {
-            using (ISession session = NHibernateHelper.OpenSession())
-                using (ITransaction transaction = session.BeginTransaction())
-                {
-                    transaction.Commit();
-                    return null;
-                }
+            return _session.Get<Country>(id);
         }
 
         public ICollection<Country> GetByName(String name)
         {
-            using (ISession session = NHibernateHelper.OpenSession())
-            {
-                return session
+                return _session
                     .CreateCriteria(typeof(Country))
                     .Add(Restrictions.Eq("Name", name))
                     .List<Country>();
-            }
-                
-                
-                 
+        }
+
+        public ICollection<Country> GetAll()
+        {
+            
+                return _session
+                    .CreateCriteria(typeof(Country))
+                    .List<Country>();
+            
         }
 
     }
