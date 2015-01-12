@@ -85,6 +85,8 @@ namespace Intersales.Qstep.Persistence.Sqlbase
             // RegisterColumnType(DbType.Guid, "RAW(16)");
         }
 
+        
+
         protected virtual void RegisterCharacterTypeMappings()
         {
             RegisterColumnType(DbType.AnsiStringFixedLength, "CHAR(254)");
@@ -378,7 +380,10 @@ namespace Intersales.Qstep.Persistence.Sqlbase
 
         //public override string ForUpdateNowaitString
         //{
-        //    get { return " for update nowait"; }
+        //    get
+        //    {
+        //        return " for update nowait";
+        //    }
         //}
 
         public override bool SupportsSequences
@@ -413,7 +418,15 @@ namespace Intersales.Qstep.Persistence.Sqlbase
 
         public override bool ForUpdateOfColumns
         {
-            get { return true; }
+            get { return false; }
+        }
+
+        public override string ForUpdateString
+        {
+            get
+            {
+                return "";
+            }
         }
 
         public override bool SupportsUnionAll

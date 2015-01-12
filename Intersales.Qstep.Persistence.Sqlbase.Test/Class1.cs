@@ -23,6 +23,7 @@ namespace Intersales.Qstep.Persistence.Sqlbase.Test
         public void Setup()
         {
             _session = NHibernateHelper.OpenSession();
+            
             //var hierarchy = (Hierarchy)LogManager.GetRepository();
             //var logger = (Logger)hierarchy.GetLogger("NHibernate.SQL");
             //logger.AddAppender(new ConsoleAppender { Layout = new SimpleLayout() });
@@ -44,13 +45,25 @@ namespace Intersales.Qstep.Persistence.Sqlbase.Test
         [Test]
         public void TestDbInsert()
         {
-            var country = new Country();
-            country.Name = "Köln";
-            var repo = new CountryRepository(_session);
-            repo.Save(country);
 
-            var countries = repo.GetByName("Köln");
-            Assert.AreEqual(1, countries.Count);
+            for (int i = 0; i <= 10; i++)
+            {
+                var repo = new CountryRepository(_session);
+
+                
+
+                using (var transaction = _session.BeginTransaction())
+                {
+                    DeleteByName(repo, "Köln");
+                    var country = new Country();
+                    country.Name = "Köln";
+                    repo.Save(country);
+                    transaction.Commit();
+                }
+
+                var countries = repo.GetByName("Köln");
+                Assert.AreEqual(1, countries.Count);
+            }
         }
 
         [Test]
@@ -58,19 +71,23 @@ namespace Intersales.Qstep.Persistence.Sqlbase.Test
         {
             var repo = new CountryRepository(_session);
 
-            var country = new Country();
-            country.Name = "Köln";
-            repo.Save(country);
+            using (var transaction = _session.BeginTransaction()) { 
+                var country = new Country();
+                country.Name = "Köln";
+                repo.Save(country);
+                DeleteByName(repo, "Köln");
+                transaction.Commit();
+            }
 
-            DeleteByName(repo);
+            
 
             var countries = repo.GetByName("Köln");
             Assert.AreEqual(0, countries.Count);
         }
 
-        private static void DeleteByName(CountryRepository repo)
+        private static void DeleteByName(CountryRepository repo, String name)
         {
-            var countries = repo.GetByName("Köln");
+            var countries = repo.GetByName(name);
             foreach (var c in countries)
             {
                 repo.Remove(c);
@@ -80,21 +97,25 @@ namespace Intersales.Qstep.Persistence.Sqlbase.Test
         [Test]
         public void TestDbUpdate()
         {
-            var repo = new CountryRepository(_session);
-            DeleteByName(repo);
-
-            var country = new Country();
-            country.Name = "Köln";
-            repo.Save(country);
-
-            country.Name = "BlaLand";
-            repo.Save(country);
-
-            var countries = repo.GetByName("BlaLand");
-            Assert.AreEqual(1, countries.Count);
-            foreach (var c in countries)
+            using (var transaction = _session.BeginTransaction())
             {
-                repo.Remove(c);
+                var repo = new CountryRepository(_session);
+                DeleteByName(repo, "Köln");
+                
+
+                var country = new Country();
+                country.Name = "Köln";
+                repo.Save(country);
+                
+
+                country.Name = "BlaLand";
+                repo.Save(country);
+                
+
+                var countries = repo.GetByName("BlaLand");
+                Assert.AreEqual(1, countries.Count);
+                DeleteByName(repo, "BlaLand");
+                transaction.Commit();
             }
         }
 
@@ -106,5 +127,13 @@ namespace Intersales.Qstep.Persistence.Sqlbase.Test
             Assert.Greater(countries.Count, 60);
         }
 
+        [TestFixtureTearDown]
+        public void TearDown()
+        {
+            if (_session != null && _session.IsOpen)
+            {
+                _session.Close();
+            }
+        }
     }
 }

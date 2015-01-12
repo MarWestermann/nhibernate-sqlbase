@@ -25,7 +25,7 @@ namespace Intersales.Qstep.Persistence.Sqlbase.Repositories
            
             if (country.Id == null)
             {
-                country.Id = 500 + new Random().Next(0, 1000);
+                //country.Id = 500 + new Random().Next(0, 1000);
             }
             _session.SaveOrUpdate(country);
                
@@ -33,8 +33,7 @@ namespace Intersales.Qstep.Persistence.Sqlbase.Repositories
 
         public void Remove(Country country)
         {
-                _session.Delete(country);
-
+            _session.Delete(country);
         }
 
         public Country GetById(int id)

@@ -3,8 +3,14 @@
                    assembly="Intersales.Qstep.Persistence.Sqlbase"
                    namespace="Intersales.Qstep.Persistence.Sqlbase.Domain">
 
-  <class name="Country" table="HTLAENDER">
-    <id name="Id" column="LAND_NKEY"/>
+  <class name="Country" table="HTLAENDER" dynamic-update="true" dynamic-insert="true">
+    <id name="Id" column="LAND_NKEY" unsaved-value="0">
+      <generator class="NHibernate.Id.TableGenerator">
+        <param name="table">TMAXSYSNUMMER</param>
+        <param name="column">MAXSYS_NR</param>
+        <param name="where">MAXSYS_BEZ = 'HTLAENDER.LAND_NKEY'</param>
+      </generator>
+    </id>
     <property name="Name" column="LAND_NAME" />
     <property name="BankAbbreviation" column="LAND_SBANK" />
   </class>
